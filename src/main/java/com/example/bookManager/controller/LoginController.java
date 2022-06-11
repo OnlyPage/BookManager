@@ -24,6 +24,12 @@ public class LoginController
         this.userService = userService;
     }
 
+    @GetMapping("/")
+    public String Home()
+    {
+        return "Home!";
+    }
+
     @PostMapping("/login")
     public ResponseEntity<UserDetailResponse> userLogin(@ModelAttribute LoginDTO loginDTO)
     {
