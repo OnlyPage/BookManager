@@ -1,6 +1,7 @@
 package com.example.bookManager.service;
 
 import com.example.bookManager.DTO.OrderDTO;
+import com.example.bookManager.domain.CustomerDetail;
 import com.example.bookManager.domain.OrderDetail;
 import com.example.bookManager.domain.StoreDetail;
 import com.example.bookManager.domain.UserDetail;
@@ -12,21 +13,21 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final StoreService storeService;
-    private final UserService userService;
+    private final CustomerService customerService;
 
-    public OrderService(OrderRepository orderRepository, StoreService storeService, UserService userService) {
+    public OrderService(OrderRepository orderRepository, StoreService storeService, CustomerService customerService) {
         this.orderRepository = orderRepository;
         this.storeService = storeService;
-        this.userService = userService;
+        this.customerService = customerService;
     }
 
     public String createNewOrder(OrderDTO orderDTO)
     {
         OrderDetail orderDetail = new OrderDetail();
-        UserDetail userDetail = userService.getUserDetailById(orderDTO.getIdCustomer());
-        StoreDetail storeDetail = storeService.getStoreDetailById(orderDTO.getIdStore());
+        CustomerDetail customerDetail = customerService.getCustomerDetailByUsername(orderDTO.getCustomerName());
+        StoreDetail storeDetail = storeService.getStoreDetailByUsername(orderDTO.getStoreName());
         orderDetail.setDateOrder(orderDTO.getDateOrder());
-        orderDetail.setCustomer(userDetail);
+        orderDetail.setCustomerDetail(customerDetail);
         orderDetail.setStoreDetail(storeDetail);
         orderDetail.setPrice(orderDTO.getPrice());
         orderRepository.save(orderDetail);
@@ -36,10 +37,10 @@ public class OrderService {
     public String updateOrder(int idOrder, OrderDTO orderDTO)
     {
         OrderDetail orderDetail = orderRepository.findById(idOrder).get();
-        UserDetail userDetail = userService.getUserDetailById(orderDTO.getIdCustomer());
-        StoreDetail storeDetail = storeService.getStoreDetailById(orderDTO.getIdStore());
+        CustomerDetail customerDetail = customerService.getCustomerDetailByUsername(orderDTO.getCustomerName());
+        StoreDetail storeDetail = storeService.getStoreDetailByUsername(orderDTO.getStoreName());
         orderDetail.setDateOrder(orderDTO.getDateOrder());
-        orderDetail.setCustomer(userDetail);
+        orderDetail.setCustomerDetail(customerDetail);
         orderDetail.setStoreDetail(storeDetail);
         orderDetail.setPrice(orderDTO.getPrice());
         orderRepository.save(orderDetail);

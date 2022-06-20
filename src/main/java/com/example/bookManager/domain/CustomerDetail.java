@@ -20,7 +20,7 @@ public class CustomerDetail
     @Column(name = "username")
     private String username;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customerDetail", cascade = CascadeType.ALL)
     private Set<OrderDetail> orderDetails;
 
     public CustomerDetail() {

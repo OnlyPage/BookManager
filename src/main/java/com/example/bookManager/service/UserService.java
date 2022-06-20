@@ -24,11 +24,13 @@ public class UserService
 
     private final CustomerService customerService;
     private final RoleService roleService;
+    private final StoreService storeService;
 
-    public UserService(UserRepository userRepository, CustomerService customerService, RoleService roleService) {
+    public UserService(UserRepository userRepository, CustomerService customerService, RoleService roleService, StoreService storeService) {
         this.userRepository = userRepository;
         this.customerService = customerService;
         this.roleService = roleService;
+        this.storeService = storeService;
     }
 
     public UserDetailResponse userLogin(LoginDTO loginDTO)
@@ -73,6 +75,10 @@ public class UserService
         if(roleDetail.getRoleName().equals("CUSTOMER"))
         {
             customerService.CreateNewCustomer(newUser.getUsername());
+        }
+        else
+        {
+            storeService.createNewStore(newUser.getUsername());
         }
         return new UserDetailResponse(newUser);
     }

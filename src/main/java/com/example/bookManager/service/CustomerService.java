@@ -24,4 +24,9 @@ public class CustomerService
     {
 
     }
+
+    public CustomerDetail getCustomerDetailByUsername(String username)
+    {
+        return customerRepository.findByUsername(username);
+    }
 }

@@ -10,26 +10,26 @@ import java.util.Date;
 
 public class OrderDTO
 {
-
-    private int idCustomer;
-    private int idStore;
+    private String customerName;
+    private String storeName;
     private Date dateOrder;
     private Integer price;
+    private Integer state;
 
-    public int getIdCustomer() {
-        return idCustomer;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setIdCustomer(int idCustomer) {
-        this.idCustomer = idCustomer;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public int getIdStore() {
-        return idStore;
+    public String getStoreName() {
+        return storeName;
     }
 
-    public void setIdStore(int idStore) {
-        this.idStore = idStore;
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
     public Date getDateOrder() {
@@ -46,5 +46,13 @@ public class OrderDTO
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 }

@@ -36,7 +36,7 @@ public class UserController
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserDetailResponse> createNewUser(@ModelAttribute("userDetail") UserDTO userDto)
+    public ResponseEntity<UserDetailResponse> createNewUser(@ModelAttribute UserDTO userDto)
     {
         try {
             UserDetailResponse userDetailResponse =  userService.createUser(userDto);

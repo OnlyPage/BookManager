@@ -6,14 +6,14 @@ import java.util.List;
 
 public class BookStoreDTO
 {
-    private Integer idStore;
+    private String idStore;
     private List<BookDTO> bookDTOS;
 
-    public Integer getIdStore() {
+    public String getIdStore() {
         return idStore;
     }
 
-    public void setIdStore(Integer idStore) {
+    public void setIdStore(String idStore) {
         this.idStore = idStore;
     }
 

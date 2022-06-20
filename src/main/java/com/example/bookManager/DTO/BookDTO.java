@@ -7,19 +7,12 @@ import java.util.Date;
 
 public class BookDTO
 {
-    private Integer id;
     private String nameBook;
     private String author;
-    private Date publicDate;
+    private String publicDate;
     private Integer number;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private Integer category;
+    private String userName;
 
     public String getNameBook() {
         return nameBook;
@@ -37,11 +30,11 @@ public class BookDTO
         this.author = author;
     }
 
-    public Date getPublicDate() {
+    public String getPublicDate() {
         return publicDate;
     }
 
-    public void setPublicDate(Date publicDate) {
+    public void setPublicDate(String publicDate) {
         this.publicDate = publicDate;
     }
 
@@ -51,5 +44,21 @@ public class BookDTO
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public Integer getCategory() {
+        return category;
+    }
+
+    public void setCategory(Integer category) {
+        this.category = category;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
