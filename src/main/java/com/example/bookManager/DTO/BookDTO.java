@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
+import java.util.List;
 
 public class BookDTO
 {
@@ -13,6 +14,8 @@ public class BookDTO
     private Integer number;
     private Integer category;
     private String userName;
+    private Integer price;
+    private List<Integer> idBooks;
 
     public String getNameBook() {
         return nameBook;
@@ -60,5 +63,21 @@ public class BookDTO
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public List<Integer> getIdBooks() {
+        return idBooks;
+    }
+
+    public void setIdBooks(List<Integer> idBooks) {
+        this.idBooks = idBooks;
     }
 }

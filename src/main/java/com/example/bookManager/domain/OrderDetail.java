@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -17,13 +18,11 @@ public class OrderDetail
     @Column(name = "id")
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "customerDetail_id")
-    private CustomerDetail customerDetail;
+    @Column(name = "customerDetail")
+    private String customerName;
 
-    @ManyToOne
-    @JoinColumn(name = "storeDetail_id")
-    private StoreDetail storeDetail;
+    @Column(name = "storeName")
+    private String storeName;
 
     @Column(name = "dateOrder")
     private Date dateOrder;
@@ -34,6 +33,9 @@ public class OrderDetail
     @Column(name = "state")
     private Integer state;
 
+    @Column(name = "book")
+    private Integer bookId;
+
     public Integer getId() {
         return id;
     }
@@ -42,20 +44,20 @@ public class OrderDetail
         this.id = id;
     }
 
-    public CustomerDetail getCustomerDetail() {
-        return customerDetail;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setCustomerDetail(CustomerDetail customerDetail) {
-        this.customerDetail = customerDetail;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public StoreDetail getStoreDetail() {
-        return storeDetail;
+    public String getStoreName() {
+        return storeName;
     }
 
-    public void setStoreDetail(StoreDetail storeDetail) {
-        this.storeDetail = storeDetail;
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
     public Date getDateOrder() {
@@ -80,5 +82,13 @@ public class OrderDetail
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public Integer getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
     }
 }

@@ -1,20 +1,26 @@
 package com.example.bookManager.DTO;
 
-import com.example.bookManager.domain.StoreDetail;
-import com.example.bookManager.domain.UserDetail;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.util.Date;
+import java.util.List;
 
 public class OrderDTO
 {
+    private int id;
     private String customerName;
     private String storeName;
     private Date dateOrder;
     private Integer price;
     private Integer state;
+    private Integer idBook;
+    private Integer number;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getCustomerName() {
         return customerName;
@@ -54,5 +60,21 @@ public class OrderDTO
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public Integer getIdBook() {
+        return idBook;
+    }
+
+    public void setIdBook(Integer idBook) {
+        this.idBook = idBook;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 }

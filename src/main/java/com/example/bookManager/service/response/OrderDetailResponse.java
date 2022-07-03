@@ -3,14 +3,17 @@ package com.example.bookManager.service.response;
 import com.example.bookManager.domain.OrderDetail;
 
 import java.util.Date;
+import java.util.List;
 
 public class OrderDetailResponse
 {
+    private Integer id;
     private String customerName;
     private String storeName;
     private Date dateOrder;
     private Integer price;
     private Integer state;
+    private Integer idBook;
 
     public OrderDetailResponse(String customerName, String storeName, Date dateOrder, Integer price, Integer state) {
         this.customerName = customerName;
@@ -22,12 +25,15 @@ public class OrderDetailResponse
 
     public OrderDetailResponse(OrderDetail orderDetail)
     {
-        this.customerName = orderDetail.getCustomerDetail().getUsername();
-        this.storeName = orderDetail.getStoreDetail().getUsername();
+        this.id = orderDetail.getId();
+        this.customerName = orderDetail.getCustomerName();
+        this.storeName = orderDetail.getStoreName();
         this.dateOrder = orderDetail.getDateOrder();
         this.price = orderDetail.getPrice();
         this.state = orderDetail.getState();
+        this.idBook = orderDetail.getBookId();
     }
+
 
     public String getCustomerName() {
         return customerName;
@@ -67,5 +73,21 @@ public class OrderDetailResponse
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getIdBook() {
+        return idBook;
+    }
+
+    public void setIdBook(Integer idBook) {
+        this.idBook = idBook;
     }
 }

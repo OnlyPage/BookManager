@@ -11,15 +11,20 @@ public class BookDetailResponse
     private Integer number;
     private String category;
     private String userName;
+    private Integer price;
+    private Float rating;
     private boolean isCanBuy;
 
-    public BookDetailResponse(String nameBook, String author, String publicDate, Integer number, String category, String userName, boolean isCanBuy) {
+    public BookDetailResponse(int id, String nameBook, String author, String publicDate, Integer number, String category, String userName, Integer price, Float rating, boolean isCanBuy) {
+        this.id = id;
         this.nameBook = nameBook;
         this.author = author;
         this.publicDate = publicDate;
         this.number = number;
         this.category = category;
         this.userName = userName;
+        this.price = price;
+        this.rating = rating;
         this.isCanBuy = isCanBuy;
     }
 
@@ -33,6 +38,7 @@ public class BookDetailResponse
         this.category = bookDetail.getCategoryDetail().getName();
         this.userName = bookDetail.getStoreDetail().getUsername();
         this.isCanBuy = bookDetail.getCanBuy();
+        this.price = bookDetail.getPrice();
     }
 
     public int getId() {
@@ -91,11 +97,27 @@ public class BookDetailResponse
         this.userName = userName;
     }
 
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
     public boolean isCanBuy() {
         return isCanBuy;
     }
 
     public void setCanBuy(boolean canBuy) {
         isCanBuy = canBuy;
+    }
+
+    public Float getRating() {
+        return rating;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 }

@@ -28,13 +28,6 @@ public class StoreDetailResponse
             bookDetailResponses.add(bookDetailResponse);
         }
         this.bookDetailResponses = bookDetailResponses;
-
-        List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
-        for (OrderDetail orderDetail: storeDetail.getOrderDetail()) {
-            OrderDetailResponse orderDetailResponse = new OrderDetailResponse(orderDetail);
-            orderDetailResponses.add(orderDetailResponse);
-        }
-        this.orderDetailResponses = orderDetailResponses;
     }
 
     public String getUsername() {

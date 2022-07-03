@@ -48,4 +48,25 @@ public class BookController {
         List<BookDetailResponse> bookDetailResponses = bookService.getAllBook();
         return new ResponseEntity<>(bookDetailResponses, HttpStatus.OK);
     }
+
+    @GetMapping("/book/{id}")
+    public ResponseEntity<BookDetailResponse> getBookById(@PathVariable("id") Integer id)
+    {
+        BookDetailResponse bookDetailResponses = bookService.getBookResById(id);
+        return new ResponseEntity<>(bookDetailResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/book/store/{name}")
+    public ResponseEntity<List<BookDetailResponse>> getBookByNameStore(@PathVariable("name") String name)
+    {
+        List<BookDetailResponse> bookDetailResponses = bookService.getAllBookByNameStore(name);
+        return new ResponseEntity<>(bookDetailResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/book/recommend/{username}")
+    public ResponseEntity<List<BookDetailResponse>> getBooksRecommend(@PathVariable("username") String username)
+    {
+        List<BookDetailResponse> bookDetailResponses = bookService.recommendBookByUsernameAndNumber(username);
+        return new ResponseEntity<>(bookDetailResponses, HttpStatus.OK);
+    }
 }

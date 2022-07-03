@@ -20,9 +20,6 @@ public class CustomerDetail
     @Column(name = "username")
     private String username;
 
-    @OneToMany(mappedBy = "customerDetail", cascade = CascadeType.ALL)
-    private Set<OrderDetail> orderDetails;
-
     public CustomerDetail() {
     }
 
@@ -42,11 +39,4 @@ public class CustomerDetail
         this.username = username;
     }
 
-    public Set<OrderDetail> getOrderDetails() {
-        return orderDetails;
-    }
-
-    public void setOrderDetails(Set<OrderDetail> orderDetails) {
-        this.orderDetails = orderDetails;
-    }
 }

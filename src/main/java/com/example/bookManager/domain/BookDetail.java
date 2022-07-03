@@ -41,6 +41,12 @@ public class BookDetail
     @Column(name = "isCanBuy")
     private Boolean isCanBuy;
 
+    @Column(name = "price")
+    private Integer price;
+
+    @OneToMany(mappedBy = "bookDetail")
+    private List<FeedBackDetail> feedBackDetails;
+
     public Integer getId() {
         return id;
     }
@@ -103,5 +109,27 @@ public class BookDetail
 
     public void setCanBuy(Boolean canBuy) {
         isCanBuy = canBuy;
+    }
+
+    public List<FeedBackDetail> getFeedBackDetails() {
+        return feedBackDetails;
+    }
+
+    public void setFeedBackDetails(List<FeedBackDetail> feedBackDetails) {
+        this.feedBackDetails = feedBackDetails;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "id " + id + " : " + nameBook;
     }
 }

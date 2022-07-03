@@ -22,9 +22,6 @@ public class StoreDetail
     private String username;
 
     @OneToMany(mappedBy = "storeDetail")
-    private List<OrderDetail> orderDetail;
-
-    @OneToMany(mappedBy = "storeDetail")
     private List<BookDetail> bookDetail;
 
     public StoreDetail()
@@ -45,14 +42,6 @@ public class StoreDetail
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public List<OrderDetail> getOrderDetail() {
-        return orderDetail;
-    }
-
-    public void setOrderDetail(List<OrderDetail> orderDetail) {
-        this.orderDetail = orderDetail;
     }
 
     public List<BookDetail> getBookDetail() {
