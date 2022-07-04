@@ -1,6 +1,9 @@
 package com.example.bookManager.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,7 +24,9 @@ public class CategoryDetail
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "categoryDetail")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "categoryDetail")
     private Set<BookDetail> bookDetails;
 
     public Integer getId() {

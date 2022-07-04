@@ -1,5 +1,7 @@
 package com.example.bookManager.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -27,7 +29,7 @@ public class BookDetail
     @Column(name = "publicDate")
     private String publicDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryDetail_id")
     private CategoryDetail categoryDetail;
 

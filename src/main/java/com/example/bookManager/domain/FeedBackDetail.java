@@ -1,5 +1,6 @@
 package com.example.bookManager.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;

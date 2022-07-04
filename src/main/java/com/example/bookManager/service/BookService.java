@@ -169,7 +169,16 @@ public class BookService
 
         for(FeedBackDetail feedBackDetail : feedBackDetails)
         {
-            inputData.get(feedBackDetail.getUsername()).put(feedBackDetail.getBookDetail(), (double)feedBackDetail.getRating());
+            if(inputData.get(feedBackDetail.getUsername()).containsKey(feedBackDetail.getBookDetail()))
+            {
+                double rating =  inputData.get(feedBackDetail.getUsername()).get(feedBackDetail.getBookDetail());
+                rating = (rating + (double) feedBackDetail.getRating()) / 2;
+                inputData.get(feedBackDetail.getUsername()).replace(feedBackDetail.getBookDetail(), rating);
+            }
+            else
+            {
+                inputData.get(feedBackDetail.getUsername()).put(feedBackDetail.getBookDetail(), (double) feedBackDetail.getRating());
+            }
         }
 
         buildDifferencesMatrix(inputData, diff, freq);
