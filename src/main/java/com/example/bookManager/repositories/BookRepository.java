@@ -19,4 +19,7 @@ public interface BookRepository extends CrudRepository<BookDetail, Integer> {
 
     @Query(value = "SELECT * FROM book_detail st WHERE st.store_detail_id = :store_detail_id", nativeQuery = true)
     List<BookDetail> findBookByIdStore(@Param("store_detail_id") Integer username);
+
+    @Query(value = "SELECT * FROM book_detail st WHERE st.name_book LIKE %:name_book%", nativeQuery = true)
+    List<BookDetail> searchByNameBookLike(@Param("name_book")String nameBook);
 }

@@ -69,4 +69,11 @@ public class BookController {
         List<BookDetailResponse> bookDetailResponses = bookService.recommendBookByUsernameAndNumber(username);
         return new ResponseEntity<>(bookDetailResponses, HttpStatus.OK);
     }
+
+    @GetMapping("/book/search/{name}")
+    public ResponseEntity<List<BookDetailResponse>> searchBookByName(@PathVariable("name") String name)
+    {
+        List<BookDetailResponse> bookDetailResponses = bookService.searchBook(name);
+        return new ResponseEntity<>(bookDetailResponses, HttpStatus.OK);
+    }
 }
