@@ -1,54 +1,116 @@
 package com.example.bookManager.service;
 
 import com.example.bookManager.DTO.OrderDTO;
-import com.example.bookManager.domain.OrderDetail;
-import com.example.bookManager.domain.StoreDetail;
-import com.example.bookManager.domain.UserDetail;
+import com.example.bookManager.domain.*;
 import com.example.bookManager.repositories.OrderRepository;
+import com.example.bookManager.service.response.OrderDetailResponse;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final StoreService storeService;
-    private final UserService userService;
+    private final CustomerService customerService;
+    private final BookService bookService;
 
-    public OrderService(OrderRepository orderRepository, StoreService storeService, UserService userService) {
+    public OrderService(OrderRepository orderRepository, StoreService storeService, CustomerService customerService,@Lazy BookService bookService) {
         this.orderRepository = orderRepository;
         this.storeService = storeService;
-        this.userService = userService;
+        this.customerService = customerService;
+        this.bookService = bookService;
     }
 
-    public String createNewOrder(OrderDTO orderDTO)
+    public OrderDetailResponse createNewOrder(OrderDTO orderDTO)
     {
         OrderDetail orderDetail = new OrderDetail();
-        UserDetail userDetail = userService.getUserDetailById(orderDTO.getIdCustomer());
-        StoreDetail storeDetail = storeService.getStoreDetailById(orderDTO.getIdStore());
         orderDetail.setDateOrder(orderDTO.getDateOrder());
-        orderDetail.setCustomer(userDetail);
-        orderDetail.setStoreDetail(storeDetail);
+        orderDetail.setCustomerName(orderDTO.getCustomerName());
+        orderDetail.setStoreName(orderDTO.getStoreName());
         orderDetail.setPrice(orderDTO.getPrice());
+        orderDetail.setBookId(orderDTO.getIdBook());
+        orderDetail.setState(orderDTO.getState());
+        orderDetail.setDateOrder(new Date(System.currentTimeMillis()));
+        orderDetail.setNumber(orderDTO.getNumber());
         orderRepository.save(orderDetail);
-        return "Create success!";
+        BookDetail bookDetail = bookService.getBookById(orderDTO.getIdBook());
+        return new OrderDetailResponse(orderDetail, bookDetail.getNameBook());
     }
 
-    public String updateOrder(int idOrder, OrderDTO orderDTO)
+    public OrderDetailResponse updateOrder(OrderDTO orderDTO)
+    {
+        OrderDetail orderDetail = orderRepository.findById(orderDTO.getId()).get();
+        orderDetail.setDateOrder(orderDTO.getDateOrder());
+        orderDetail.setCustomerName(orderDTO.getCustomerName());
+        orderDetail.setStoreName(orderDTO.getStoreName());
+        orderDetail.setPrice(orderDTO.getNumber());
+        orderDetail.setBookId(orderDTO.getIdBook());
+        orderDetail.setState(orderDTO.getState());
+        orderDetail.setNumber(orderDTO.getNumber());
+        orderRepository.save(orderDetail);
+        BookDetail bookDetail = bookService.getBookById(orderDTO.getIdBook());
+        return new OrderDetailResponse(orderDetail, bookDetail.getNameBook());
+    }
+
+    public OrderDetailResponse updateStateById(int idOrder, int state)
     {
         OrderDetail orderDetail = orderRepository.findById(idOrder).get();
-        UserDetail userDetail = userService.getUserDetailById(orderDTO.getIdCustomer());
-        StoreDetail storeDetail = storeService.getStoreDetailById(orderDTO.getIdStore());
-        orderDetail.setDateOrder(orderDTO.getDateOrder());
-        orderDetail.setCustomer(userDetail);
-        orderDetail.setStoreDetail(storeDetail);
-        orderDetail.setPrice(orderDTO.getPrice());
-        orderRepository.save(orderDetail);
-        return "Update success!";
+        orderDetail.setState(state);
+        BookDetail bookDetail = bookService.getBookById(orderDetail.getBookId());
+        return new OrderDetailResponse(orderDetail, bookDetail.getNameBook());
     }
 
     public String deleteOrder(int idOrder)
     {
         orderRepository.deleteById(idOrder);
         return "Delete success";
+    }
+
+    public List<OrderDetailResponse> getAllOrders()
+    {
+        List<OrderDetail> orderDetails = orderRepository.findAll();
+        List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
+        for (OrderDetail orderDetail:orderDetails)
+        {
+            BookDetail bookDetail = bookService.getBookById(orderDetail.getBookId());
+            orderDetailResponses.add(new OrderDetailResponse(orderDetail, bookDetail.getNameBook()));
+        }
+        return orderDetailResponses;
+    }
+
+    public OrderDetailResponse getOrderById(int id)
+    {
+        OrderDetail orderDetail = orderRepository.findById(id).get();
+        BookDetail bookDetail = bookService.getBookById(orderDetail.getBookId());
+        return new OrderDetailResponse(orderDetail, bookDetail.getNameBook());
+    }
+
+    public List<OrderDetailResponse> getAllOrdersByCustomerName(String customerNames)
+    {
+        List<OrderDetail> orderDetails = orderRepository.findOrderByCustomerName(customerNames);
+        List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
+        for (OrderDetail orderDetail:orderDetails)
+        {
+            BookDetail bookDetail = bookService.getBookById(orderDetail.getBookId());
+            orderDetailResponses.add(new OrderDetailResponse(orderDetail, bookDetail.getNameBook()));
+        }
+        return orderDetailResponses;
+    }
+
+    public List<OrderDetailResponse> getAllOrdersByStoreName(String storeNames)
+    {
+        List<OrderDetail> orderDetails = orderRepository.findOrderByStoreName(storeNames);
+        List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
+        for (OrderDetail orderDetail:orderDetails)
+        {
+            BookDetail bookDetail = bookService.getBookById(orderDetail.getBookId());
+            orderDetailResponses.add(new OrderDetailResponse(orderDetail, bookDetail.getNameBook()));
+        }
+        return orderDetailResponses;
     }
 }

@@ -1,48 +1,42 @@
 package com.example.bookManager.service;
 
-import com.example.bookManager.DTO.BookDTO;
-import com.example.bookManager.DTO.StoreDTO;
+import com.example.bookManager.Exception.StoreNotFoundException;
 import com.example.bookManager.domain.BookDetail;
-import com.example.bookManager.domain.BookStore;
 import com.example.bookManager.domain.StoreDetail;
 import com.example.bookManager.domain.UserDetail;
 import com.example.bookManager.repositories.StoreRepository;
-import com.example.bookManager.repositories.UserRepository;
+import com.example.bookManager.service.response.StoreDetailResponse;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class StoreService
 {
     private final StoreRepository storeRepository;
     private final BookService bookService;
-    private final UserService userService;
 
-    public StoreService(StoreRepository storeRepository, BookService bookService, UserService userService) {
+    public StoreService(StoreRepository storeRepository, @Lazy BookService bookService) {
         this.storeRepository = storeRepository;
         this.bookService = bookService;
-        this.userService = userService;
     }
 
-    public String createNewStore(String username, StoreDTO storeDTO)
+    public String createNewStore(String username)
     {
-        UserDetail userDetail = userService.getUserDetailByUserName(username);
-        if(userDetail!= null)
-        {
-            StoreDetail storeDetail = new StoreDetail();
-            storeDetail.setNameStore(storeDTO.getNameStore());
-            storeDetail.setUsername(username);
-            storeRepository.save(storeDetail);
-            return "create store success";
-        }
-        return "create store fail";
+        StoreDetail storeDetail = new StoreDetail();
+        storeDetail.setUsername(username);
+        storeRepository.save(storeDetail);
+        return "create store success";
     }
 
-    public String updateStore(int id, StoreDTO storeDTO)
+    public String updateStore(String username)
     {
-        StoreDetail storeDetail = storeRepository.findById(id).get();
-        storeDetail.setNameStore(storeDTO.getNameStore());
+        StoreDetail storeDetail = new StoreDetail();
+        storeDetail.setUsername(username);
         storeRepository.save(storeDetail);
         return "update store success";
     }
@@ -64,5 +58,35 @@ public class StoreService
         return storeRepository.findById(id).get();
     }
 
+    public StoreDetail getStoreDetailByUsername(String userName)
+    {
+        StoreDetail storeDetail = storeRepository.findStoreByUserName(userName);
+        if(storeDetail == null)
+        {
+            throw  new StoreNotFoundException("Store not found by name: " + userName);
+        }
+        return storeDetail;
+    }
 
+    public StoreDetailResponse getStoreResponseByUsername(String userName)
+    {
+        StoreDetail storeDetail = storeRepository.findStoreByUserName(userName);
+        if(storeDetail == null)
+        {
+            throw  new StoreNotFoundException("Store not found by name: " + userName);
+        }
+        return new StoreDetailResponse(storeDetail);
+    }
+
+    public List<StoreDetailResponse> getAllStoreResponse()
+    {
+        List<StoreDetail> storeDetails = storeRepository.findAll();
+        List<StoreDetailResponse> storeDetailResponses = new ArrayList<>();
+        for (StoreDetail storeDetail: storeDetails)
+        {
+            StoreDetailResponse storeDetailResponse = new StoreDetailResponse(storeDetail);
+            storeDetailResponses.add(storeDetailResponse);
+        }
+        return storeDetailResponses;
+    }
 }

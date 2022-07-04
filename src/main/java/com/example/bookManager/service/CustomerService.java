@@ -4,6 +4,8 @@ import com.example.bookManager.domain.CustomerDetail;
 import com.example.bookManager.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomerService
 {
@@ -23,5 +25,16 @@ public class CustomerService
     public void DeleteCustomer(String username)
     {
 
+    }
+
+    public CustomerDetail getCustomerDetailByUsername(String username)
+    {
+        return customerRepository.findByUsername(username);
+    }
+
+    public List<CustomerDetail> findAll()
+    {
+        List<CustomerDetail> customerDetails = customerRepository.findAll();
+        return customerDetails;
     }
 }

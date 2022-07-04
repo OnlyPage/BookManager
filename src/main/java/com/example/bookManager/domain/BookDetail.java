@@ -3,7 +3,7 @@ package com.example.bookManager.domain;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,10 +25,27 @@ public class BookDetail
     private String author;
 
     @Column(name = "publicDate")
-    private Date publicDate;
+    private String publicDate;
+
+    @ManyToOne
+    @JoinColumn(name = "categoryDetail_id")
+    private CategoryDetail categoryDetail;
+
+    @ManyToOne
+    @JoinColumn(name = "storeDetail_id")
+    private StoreDetail storeDetail;
+
+    @Column(name = "number")
+    private Integer number;
+
+    @Column(name = "isCanBuy")
+    private Boolean isCanBuy;
+
+    @Column(name = "price")
+    private Integer price;
 
     @OneToMany(mappedBy = "bookDetail")
-    private Set<BookStore> bookStore;
+    private List<FeedBackDetail> feedBackDetails;
 
     public Integer getId() {
         return id;
@@ -54,19 +71,65 @@ public class BookDetail
         this.author = author;
     }
 
-    public Date getPublicDate() {
+    public String getPublicDate() {
         return publicDate;
     }
 
-    public void setPublicDate(Date publicDate) {
+    public void setPublicDate(String publicDate) {
         this.publicDate = publicDate;
     }
 
-    public Set<BookStore> getBookStore() {
-        return bookStore;
+    public StoreDetail getStoreDetail() {
+        return storeDetail;
     }
 
-    public void setBookStore(Set<BookStore> bookStore) {
-        this.bookStore = bookStore;
+    public void setStoreDetail(StoreDetail storeDetail) {
+        this.storeDetail = storeDetail;
+    }
+
+    public CategoryDetail getCategoryDetail() {
+        return categoryDetail;
+    }
+
+    public void setCategoryDetail(CategoryDetail categoryDetail) {
+        this.categoryDetail = categoryDetail;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
+    public Boolean getCanBuy() {
+        return isCanBuy;
+    }
+
+    public void setCanBuy(Boolean canBuy) {
+        isCanBuy = canBuy;
+    }
+
+    public List<FeedBackDetail> getFeedBackDetails() {
+        return feedBackDetails;
+    }
+
+    public void setFeedBackDetails(List<FeedBackDetail> feedBackDetails) {
+        this.feedBackDetails = feedBackDetails;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "id " + id + " : " + nameBook;
     }
 }

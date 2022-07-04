@@ -3,6 +3,7 @@ package com.example.bookManager.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,17 +18,11 @@ public class StoreDetail
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "nameStore")
-    private String nameStore;
-
     @Column(name = "username")
     private String username;
 
-    @OneToMany(mappedBy = "storeDetail", cascade = CascadeType.ALL)
-    private Set<OrderDetail> orderDetails;
-
     @OneToMany(mappedBy = "storeDetail")
-    private Set<BookStore> bookStore;
+    private List<BookDetail> bookDetail;
 
     public StoreDetail()
     {
@@ -41,14 +36,6 @@ public class StoreDetail
         this.id = id;
     }
 
-    public String getNameStore() {
-        return nameStore;
-    }
-
-    public void setNameStore(String nameStore) {
-        this.nameStore = nameStore;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -57,19 +44,17 @@ public class StoreDetail
         this.username = username;
     }
 
-    public Set<OrderDetail> getOrderDetails() {
-        return orderDetails;
+    public List<BookDetail> getBookDetail() {
+        return bookDetail;
     }
 
-    public void setOrderDetails(Set<OrderDetail> orderDetails) {
-        this.orderDetails = orderDetails;
+    public void setBookDetail(List<BookDetail> bookDetail) {
+        this.bookDetail = bookDetail;
     }
 
-    public Set<BookStore> getBookStore() {
-        return bookStore;
-    }
-
-    public void setBookStore(Set<BookStore> bookStore) {
-        this.bookStore = bookStore;
+    @Override
+    public String toString()
+    {
+        return "id " + id + " : " + username;
     }
 }

@@ -1,35 +1,41 @@
 package com.example.bookManager.DTO;
 
-import com.example.bookManager.domain.StoreDetail;
-import com.example.bookManager.domain.UserDetail;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.util.Date;
+import java.util.List;
 
 public class OrderDTO
 {
-
-    private int idCustomer;
-    private int idStore;
+    private int id;
+    private String customerName;
+    private String storeName;
     private Date dateOrder;
     private Integer price;
+    private Integer state;
+    private Integer idBook;
+    private Integer number;
 
-    public int getIdCustomer() {
-        return idCustomer;
+    public int getId() {
+        return id;
     }
 
-    public void setIdCustomer(int idCustomer) {
-        this.idCustomer = idCustomer;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getIdStore() {
-        return idStore;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setIdStore(int idStore) {
-        this.idStore = idStore;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
     public Date getDateOrder() {
@@ -46,5 +52,29 @@ public class OrderDTO
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Integer getIdBook() {
+        return idBook;
+    }
+
+    public void setIdBook(Integer idBook) {
+        this.idBook = idBook;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 }
