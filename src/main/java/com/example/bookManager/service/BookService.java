@@ -139,6 +139,20 @@ public class BookService
         return bookDetails;
     }
 
+    public List<BookDetailResponse> searchBook(String name)
+    {
+        List<BookDetail> bookDetails = bookRepository.searchByNameBookLike(name);
+        List<BookDetailResponse> bookDetailResponses = new ArrayList<>();
+        if(bookDetails != null) {
+            for (BookDetail bookDetail: bookDetails) {
+                BookDetailResponse bookDetailResponse = new BookDetailResponse(bookDetail);
+                bookDetailResponse.setRating(feedbackService.getRatingByIdBook(bookDetail.getId()));
+                bookDetailResponses.add(bookDetailResponse);
+            }
+        }
+        return bookDetailResponses;
+    }
+
     public List<BookDetailResponse> recommendBookByUsernameAndNumber(String username)
     {
         Map<BookDetail, Map<BookDetail, Double>> diff = new HashMap<>();
