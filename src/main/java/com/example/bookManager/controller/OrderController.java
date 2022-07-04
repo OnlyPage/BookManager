@@ -37,9 +37,10 @@ public class OrderController {
     }
 
     @DeleteMapping("/order/{id}")
-    public String deleteBookById(@PathVariable("id") Integer id)
+    public ResponseEntity<String> deleteBookById(@PathVariable("id") Integer id)
     {
-        return orderService.deleteOrder(id);
+        String response = orderService.deleteOrder(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/order")

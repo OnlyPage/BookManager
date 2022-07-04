@@ -110,8 +110,11 @@ public class FeedbackService
         List<FeedBackDetail> feedBackDetails = feedbackRepository.findFeedBackByBookId(idBook);
         for (FeedBackDetail feedBackDetail : feedBackDetails)
         {
+            FeedbackDetailResponse feedbackDetailResponse;
             UserDetail userDetail = userService.getUserDetailByUserName(feedBackDetail.getUsername());
-            data.add(new FeedbackDetailResponse(feedBackDetail, userDetail));
+            feedbackDetailResponse = new FeedbackDetailResponse(feedBackDetail, userDetail);
+            data.add(feedbackDetailResponse);
+            feedbackDetailResponse.getBookDetailResponse().setRating(getRatingByIdBook(feedBackDetail.getBookDetail().getId()));
         }
         return data;
     }

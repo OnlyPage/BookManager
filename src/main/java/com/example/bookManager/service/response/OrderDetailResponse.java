@@ -3,7 +3,6 @@ package com.example.bookManager.service.response;
 import com.example.bookManager.domain.OrderDetail;
 
 import java.util.Date;
-import java.util.List;
 
 public class OrderDetailResponse
 {
@@ -13,17 +12,21 @@ public class OrderDetailResponse
     private Date dateOrder;
     private Integer price;
     private Integer state;
-    private Integer idBook;
+    private String nameBook;
+    private Integer number;
 
-    public OrderDetailResponse(String customerName, String storeName, Date dateOrder, Integer price, Integer state) {
+    public OrderDetailResponse(Integer id, String customerName, String storeName, Date dateOrder, Integer price, Integer state, String nameBook, Integer number) {
+        this.id = id;
         this.customerName = customerName;
         this.storeName = storeName;
         this.dateOrder = dateOrder;
         this.price = price;
         this.state = state;
+        this.nameBook = nameBook;
+        this.number = number;
     }
 
-    public OrderDetailResponse(OrderDetail orderDetail)
+    public OrderDetailResponse(OrderDetail orderDetail, String nameBook)
     {
         this.id = orderDetail.getId();
         this.customerName = orderDetail.getCustomerName();
@@ -31,7 +34,8 @@ public class OrderDetailResponse
         this.dateOrder = orderDetail.getDateOrder();
         this.price = orderDetail.getPrice();
         this.state = orderDetail.getState();
-        this.idBook = orderDetail.getBookId();
+        this.nameBook = nameBook;
+        this.number = orderDetail.getNumber();
     }
 
 
@@ -83,11 +87,19 @@ public class OrderDetailResponse
         this.id = id;
     }
 
-    public Integer getIdBook() {
-        return idBook;
+    public String getNameBook() {
+        return nameBook;
     }
 
-    public void setIdBook(Integer idBook) {
-        this.idBook = idBook;
+    public void setNameBook(String nameBook) {
+        this.nameBook = nameBook;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 }

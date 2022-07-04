@@ -36,6 +36,9 @@ public class OrderDetail
     @Column(name = "book")
     private Integer bookId;
 
+    @Column(name = "number")
+    private Integer number;
+
     public Integer getId() {
         return id;
     }
@@ -90,5 +93,13 @@ public class OrderDetail
 
     public void setBookId(Integer bookId) {
         this.bookId = bookId;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 }

@@ -1,16 +1,12 @@
 package com.example.bookManager.service;
 
-import com.example.bookManager.DTO.BookOrderDTO;
 import com.example.bookManager.DTO.OrderDTO;
 import com.example.bookManager.domain.*;
 import com.example.bookManager.repositories.OrderRepository;
-import com.example.bookManager.service.response.BookDetailResponse;
 import com.example.bookManager.service.response.OrderDetailResponse;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,12 +32,14 @@ public class OrderService {
         orderDetail.setDateOrder(orderDTO.getDateOrder());
         orderDetail.setCustomerName(orderDTO.getCustomerName());
         orderDetail.setStoreName(orderDTO.getStoreName());
-        orderDetail.setPrice(orderDTO.getNumber());
+        orderDetail.setPrice(orderDTO.getPrice());
         orderDetail.setBookId(orderDTO.getIdBook());
         orderDetail.setState(orderDTO.getState());
         orderDetail.setDateOrder(new Date(System.currentTimeMillis()));
+        orderDetail.setNumber(orderDTO.getNumber());
         orderRepository.save(orderDetail);
-        return new OrderDetailResponse(orderDetail);
+        BookDetail bookDetail = bookService.getBookById(orderDTO.getIdBook());
+        return new OrderDetailResponse(orderDetail, bookDetail.getNameBook());
     }
 
     public OrderDetailResponse updateOrder(OrderDTO orderDTO)
@@ -53,15 +51,18 @@ public class OrderService {
         orderDetail.setPrice(orderDTO.getNumber());
         orderDetail.setBookId(orderDTO.getIdBook());
         orderDetail.setState(orderDTO.getState());
+        orderDetail.setNumber(orderDTO.getNumber());
         orderRepository.save(orderDetail);
-        return new OrderDetailResponse(orderDetail);
+        BookDetail bookDetail = bookService.getBookById(orderDTO.getIdBook());
+        return new OrderDetailResponse(orderDetail, bookDetail.getNameBook());
     }
 
     public OrderDetailResponse updateStateById(int idOrder, int state)
     {
         OrderDetail orderDetail = orderRepository.findById(idOrder).get();
         orderDetail.setState(state);
-        return new OrderDetailResponse(orderDetail);
+        BookDetail bookDetail = bookService.getBookById(orderDetail.getBookId());
+        return new OrderDetailResponse(orderDetail, bookDetail.getNameBook());
     }
 
     public String deleteOrder(int idOrder)
@@ -76,7 +77,8 @@ public class OrderService {
         List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
         for (OrderDetail orderDetail:orderDetails)
         {
-            orderDetailResponses.add(new OrderDetailResponse(orderDetail));
+            BookDetail bookDetail = bookService.getBookById(orderDetail.getBookId());
+            orderDetailResponses.add(new OrderDetailResponse(orderDetail, bookDetail.getNameBook()));
         }
         return orderDetailResponses;
     }
@@ -84,7 +86,8 @@ public class OrderService {
     public OrderDetailResponse getOrderById(int id)
     {
         OrderDetail orderDetail = orderRepository.findById(id).get();
-        return new OrderDetailResponse(orderDetail);
+        BookDetail bookDetail = bookService.getBookById(orderDetail.getBookId());
+        return new OrderDetailResponse(orderDetail, bookDetail.getNameBook());
     }
 
     public List<OrderDetailResponse> getAllOrdersByCustomerName(String customerNames)
@@ -93,7 +96,8 @@ public class OrderService {
         List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
         for (OrderDetail orderDetail:orderDetails)
         {
-            orderDetailResponses.add(new OrderDetailResponse(orderDetail));
+            BookDetail bookDetail = bookService.getBookById(orderDetail.getBookId());
+            orderDetailResponses.add(new OrderDetailResponse(orderDetail, bookDetail.getNameBook()));
         }
         return orderDetailResponses;
     }
@@ -104,7 +108,8 @@ public class OrderService {
         List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
         for (OrderDetail orderDetail:orderDetails)
         {
-            orderDetailResponses.add(new OrderDetailResponse(orderDetail));
+            BookDetail bookDetail = bookService.getBookById(orderDetail.getBookId());
+            orderDetailResponses.add(new OrderDetailResponse(orderDetail, bookDetail.getNameBook()));
         }
         return orderDetailResponses;
     }

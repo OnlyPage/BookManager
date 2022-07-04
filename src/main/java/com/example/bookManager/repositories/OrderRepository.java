@@ -1,7 +1,6 @@
 package com.example.bookManager.repositories;
 
 import com.example.bookManager.domain.OrderDetail;
-import com.example.bookManager.domain.UserDetail;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +16,6 @@ public interface OrderRepository extends CrudRepository<OrderDetail, Integer> {
     @Query(value = "SELECT * FROM order_detail od WHERE od.customer_detail = :customerName", nativeQuery = true)
     List<OrderDetail> findOrderByCustomerName(@Param("customerName") String customerName);
 
-    @Query(value = "SELECT * FROM order_detail od WHERE od.storeName_name = :storeName", nativeQuery = true)
+    @Query(value = "SELECT * FROM order_detail od WHERE od.store_name = :storeName", nativeQuery = true)
     List<OrderDetail> findOrderByStoreName(@Param("storeName") String storeName);
 }
