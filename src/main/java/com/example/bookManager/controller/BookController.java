@@ -66,8 +66,13 @@ public class BookController {
     @GetMapping("/book/recommend/{username}")
     public ResponseEntity<List<BookDetailResponse>> getBooksRecommend(@PathVariable("username") String username)
     {
-        List<BookDetailResponse> bookDetailResponses = bookService.recommendBookByUsernameAndNumber(username);
-        return new ResponseEntity<>(bookDetailResponses, HttpStatus.OK);
+        try {
+            List<BookDetailResponse> bookDetailResponses = bookService.recommendBookByUsernameAndNumber(username);
+            return new ResponseEntity<>(bookDetailResponses, HttpStatus.OK);
+        }catch (Exception e)
+        {
+            throw  e;
+        }
     }
 
     @GetMapping("/book/search/{name}")
