@@ -71,7 +71,8 @@ public class BookController {
             return new ResponseEntity<>(bookDetailResponses, HttpStatus.OK);
         }catch (Exception e)
         {
-            throw  e;
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User Not Found", e);
         }
     }
 
