@@ -155,120 +155,133 @@ public class BookService
 
     public List<BookDetailResponse> recommendBookByUsernameAndNumber(String username)
     {
-        Map<BookDetail, Map<BookDetail, Double>> diff = new HashMap<>();
-        Map<BookDetail, Map<BookDetail, Integer>> freq = new HashMap<>();
-        Map<String, HashMap<BookDetail, Double>> inputData = new HashMap<>();
-        Map<String, HashMap<BookDetail, Double>> outputData = new HashMap<>();
+        try {
+            Map<BookDetail, Map<BookDetail, Double>> diff = new HashMap<>();
+            Map<BookDetail, Map<BookDetail, Integer>> freq = new HashMap<>();
+            Map<String, HashMap<BookDetail, Double>> inputData = new HashMap<>();
+            Map<String, HashMap<BookDetail, Double>> outputData = new HashMap<>();
 
-        List<FeedBackDetail> feedBackDetails = feedbackService.getAllFeedbackDetail();
-        List<CustomerDetail> customerDetails = customerService.findAll();
-        for (CustomerDetail customerDetail : customerDetails)
-        {
-            inputData.put(customerDetail.getUsername(), new HashMap<>());
-        }
-
-        for(FeedBackDetail feedBackDetail : feedBackDetails)
-        {
-            if(inputData.get(feedBackDetail.getUsername()).containsKey(feedBackDetail.getBookDetail()))
-            {
-                double rating =  inputData.get(feedBackDetail.getUsername()).get(feedBackDetail.getBookDetail());
-                rating = (rating + (double) feedBackDetail.getRating()) / 2;
-                inputData.get(feedBackDetail.getUsername()).replace(feedBackDetail.getBookDetail(), rating);
+            List<FeedBackDetail> feedBackDetails = feedbackService.getAllFeedbackDetail();
+            List<CustomerDetail> customerDetails = customerService.findAll();
+            for (CustomerDetail customerDetail : customerDetails) {
+                inputData.put(customerDetail.getUsername(), new HashMap<>());
             }
-            else
-            {
-                inputData.get(feedBackDetail.getUsername()).put(feedBackDetail.getBookDetail(), (double) feedBackDetail.getRating());
+
+            for (FeedBackDetail feedBackDetail : feedBackDetails) {
+                if (inputData.get(feedBackDetail.getUsername()).containsKey(feedBackDetail.getBookDetail())) {
+                    double rating = inputData.get(feedBackDetail.getUsername()).get(feedBackDetail.getBookDetail());
+                    rating = (rating + (double) feedBackDetail.getRating()) / 2;
+                    inputData.get(feedBackDetail.getUsername()).replace(feedBackDetail.getBookDetail(), rating);
+                } else {
+                    inputData.get(feedBackDetail.getUsername()).put(feedBackDetail.getBookDetail(), (double) feedBackDetail.getRating());
+                }
             }
+
+            buildDifferencesMatrix(inputData, diff, freq);
+
+            predict(inputData, diff, freq, outputData);
+
+            List<BookDetailResponse> value = new ArrayList<>();
+            outputData.get(username).entrySet().stream().
+                    sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).
+                    forEach(k ->
+                    {
+                        BookDetailResponse bookDetailResponse = new BookDetailResponse(k.getKey());
+                        bookDetailResponse.setRating(feedbackService.getRatingByIdBook(bookDetailResponse.getId()));
+                        value.add(bookDetailResponse);
+                    });
+            return value;
         }
-
-        buildDifferencesMatrix(inputData, diff, freq);
-
-        predict(inputData, diff, freq, outputData);
-
-        List<BookDetailResponse> value = new ArrayList<>();
-        outputData.get(username).entrySet().stream().
-                sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).
-                forEach(k ->
-                {
-                    BookDetailResponse bookDetailResponse = new BookDetailResponse(k.getKey());
-                    bookDetailResponse.setRating(feedbackService.getRatingByIdBook(bookDetailResponse.getId()));
-                    value.add(bookDetailResponse);
-                });
-        return value;
+        catch (Exception e)
+        {
+            throw e;
+        }
     }
 
 
     private void buildDifferencesMatrix(Map<String, HashMap<BookDetail, Double>> data, Map<BookDetail, Map<BookDetail, Double>> diff,
                                                Map<BookDetail, Map<BookDetail, Integer>> freq)
     {
-        for (HashMap<BookDetail, Double> user : data.values()) {
-            for (Map.Entry<BookDetail, Double> e : user.entrySet()) {
-                if (!diff.containsKey(e.getKey())) {
-                    diff.put(e.getKey(), new HashMap<BookDetail, Double>());
-                    freq.put(e.getKey(), new HashMap<BookDetail, Integer>());
+        try {
+            for (HashMap<BookDetail, Double> user : data.values()) {
+                for (Map.Entry<BookDetail, Double> e : user.entrySet()) {
+                    if (!diff.containsKey(e.getKey())) {
+                        diff.put(e.getKey(), new HashMap<BookDetail, Double>());
+                        freq.put(e.getKey(), new HashMap<BookDetail, Integer>());
+                    }
+                    for (Map.Entry<BookDetail, Double> e2 : user.entrySet()) {
+                        int oldCount = 0;
+                        if (freq.get(e.getKey()).containsKey(e2.getKey())) {
+                            oldCount = freq.get(e.getKey()).get(e2.getKey()).intValue();
+                        }
+                        double oldDiff = 0.0;
+                        if (diff.get(e.getKey()).containsKey(e2.getKey())) {
+                            oldDiff = diff.get(e.getKey()).get(e2.getKey()).doubleValue();
+                        }
+                        double observedDiff = e.getValue() - e2.getValue();
+                        freq.get(e.getKey()).put(e2.getKey(), oldCount + 1);
+                        diff.get(e.getKey()).put(e2.getKey(), oldDiff + observedDiff);
+                    }
                 }
-                for (Map.Entry<BookDetail, Double> e2 : user.entrySet()) {
-                    int oldCount = 0;
-                    if (freq.get(e.getKey()).containsKey(e2.getKey())) {
-                        oldCount = freq.get(e.getKey()).get(e2.getKey()).intValue();
-                    }
-                    double oldDiff = 0.0;
-                    if (diff.get(e.getKey()).containsKey(e2.getKey())) {
-                        oldDiff = diff.get(e.getKey()).get(e2.getKey()).doubleValue();
-                    }
-                    double observedDiff = e.getValue() - e2.getValue();
-                    freq.get(e.getKey()).put(e2.getKey(), oldCount + 1);
-                    diff.get(e.getKey()).put(e2.getKey(), oldDiff + observedDiff);
+            }
+            for (BookDetail j : diff.keySet()) {
+                for (BookDetail i : diff.get(j).keySet()) {
+                    double oldValue = diff.get(j).get(i).doubleValue();
+                    int count = freq.get(j).get(i).intValue();
+                    diff.get(j).put(i, oldValue / count);
                 }
             }
         }
-        for (BookDetail j : diff.keySet()) {
-            for (BookDetail i : diff.get(j).keySet()) {
-                double oldValue = diff.get(j).get(i).doubleValue();
-                int count = freq.get(j).get(i).intValue();
-                diff.get(j).put(i, oldValue / count);
-            }
+        catch (Exception e)
+        {
+            throw e;
         }
     }
 
     private void predict(Map<String, HashMap<BookDetail, Double>> data, Map<BookDetail, Map<BookDetail, Double>> diff,
                                 Map<BookDetail, Map<BookDetail, Integer>> freq, Map<String, HashMap<BookDetail, Double>> outputData)
     {
-        HashMap<BookDetail, Double> uPred = new HashMap<BookDetail, Double>();
-        HashMap<BookDetail, Integer> uFreq = new HashMap<BookDetail, Integer>();
-        List<BookDetail> bookDetails = new ArrayList<>();
-        bookDetails = getAllBookDetail();
-        for (BookDetail j : diff.keySet()) {
-            uFreq.put(j, 0);
-            uPred.put(j, 0.0);
-        }
-        for (Map.Entry<String, HashMap<BookDetail, Double>> e : data.entrySet()) {
-            for (BookDetail j : e.getValue().keySet()) {
-                for (BookDetail k : diff.keySet()) {
-                    try {
-                        double predictedValue = diff.get(k).get(j).doubleValue() + e.getValue().get(j).doubleValue();
-                        double finalValue = predictedValue * freq.get(k).get(j).intValue();
-                        uPred.put(k, uPred.get(k) + finalValue);
-                        uFreq.put(k, uFreq.get(k) + freq.get(k).get(j).intValue());
-                    } catch (NullPointerException e1) {
+        try {
+            HashMap<BookDetail, Double> uPred = new HashMap<BookDetail, Double>();
+            HashMap<BookDetail, Integer> uFreq = new HashMap<BookDetail, Integer>();
+            List<BookDetail> bookDetails = new ArrayList<>();
+            bookDetails = getAllBookDetail();
+            for (BookDetail j : diff.keySet()) {
+                uFreq.put(j, 0);
+                uPred.put(j, 0.0);
+            }
+            for (Map.Entry<String, HashMap<BookDetail, Double>> e : data.entrySet()) {
+                for (BookDetail j : e.getValue().keySet()) {
+                    for (BookDetail k : diff.keySet()) {
+                        try {
+                            double predictedValue = diff.get(k).get(j).doubleValue() + e.getValue().get(j).doubleValue();
+                            double finalValue = predictedValue * freq.get(k).get(j).intValue();
+                            uPred.put(k, uPred.get(k) + finalValue);
+                            uFreq.put(k, uFreq.get(k) + freq.get(k).get(j).intValue());
+                        } catch (NullPointerException e1) {
+                        }
                     }
                 }
-            }
-            HashMap<BookDetail, Double> clean = new HashMap<BookDetail, Double>();
-            for (BookDetail j : uPred.keySet()) {
-                if (uFreq.get(j) > 0) {
-                    clean.put(j, uPred.get(j).doubleValue() / uFreq.get(j).intValue());
+                HashMap<BookDetail, Double> clean = new HashMap<BookDetail, Double>();
+                for (BookDetail j : uPred.keySet()) {
+                    if (uFreq.get(j) > 0) {
+                        clean.put(j, uPred.get(j).doubleValue() / uFreq.get(j).intValue());
+                    }
                 }
-            }
 
-            for (BookDetail j : bookDetails) {
-                if (e.getValue().containsKey(j)) {
-                    clean.put(j, e.getValue().get(j));
-                } else if (!clean.containsKey(j)) {
-                    clean.put(j, -1.0);
+                for (BookDetail j : bookDetails) {
+                    if (e.getValue().containsKey(j)) {
+                        clean.put(j, e.getValue().get(j));
+                    } else if (!clean.containsKey(j)) {
+                        clean.put(j, -1.0);
+                    }
                 }
+                outputData.put(e.getKey(), clean);
             }
-            outputData.put(e.getKey(), clean);
+        }
+        catch (Exception e)
+        {
+            throw e;
         }
     }
 
