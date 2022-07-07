@@ -54,6 +54,7 @@ public class OrderService {
         orderDetail.setNumber(orderDTO.getNumber());
         orderRepository.save(orderDetail);
         BookDetail bookDetail = bookService.getBookById(orderDTO.getIdBook());
+        bookService.updateBook(bookDetail);
         return new OrderDetailResponse(orderDetail, bookDetail.getNameBook());
     }
 
@@ -62,6 +63,8 @@ public class OrderService {
         OrderDetail orderDetail = orderRepository.findById(idOrder).get();
         orderDetail.setState(state);
         BookDetail bookDetail = bookService.getBookById(orderDetail.getBookId());
+        bookDetail.setNumber(bookDetail.getNumber() - orderDetail.getNumber());
+
         return new OrderDetailResponse(orderDetail, bookDetail.getNameBook());
     }
 
@@ -113,4 +116,5 @@ public class OrderService {
         }
         return orderDetailResponses;
     }
+
 }

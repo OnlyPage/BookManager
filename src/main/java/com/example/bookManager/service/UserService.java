@@ -10,6 +10,7 @@ import com.example.bookManager.domain.UserDetail;
 import com.example.bookManager.helper.ListHelper;
 import com.example.bookManager.repositories.UserRepository;
 import com.example.bookManager.service.response.UserDetailResponse;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -83,16 +84,16 @@ public class UserService
         return new UserDetailResponse(newUser);
     }
 
-    public String updateUser(UserDTO userDTO)
+    public UserDetailResponse updateUser(UserDTO userDTO)
     {
-        UserDetail userDetail = userRepository.findUserByUserName(userDTO.getUsername());
-        userDetail.setPassword(userDTO.getPassword());
-        userDetail.setPhoneNumber(userDTO.getPhoneNumber());
-        userDetail.setAddress(userDTO.getAddress());
-        userDetail.setEmail(userDTO.getEmail());
-        userDetail.setCreateTime(new Date());
-        userRepository.save(userDetail);
-        return "update success";
+        UserDetail oldUser = userRepository.findByUsername(userDTO.getUsername());
+
+        oldUser.setPassword(userDTO.getPassword());
+        oldUser.setPhoneNumber(userDTO.getPhoneNumber());
+        oldUser.setAddress(userDTO.getAddress());
+        oldUser.setEmail(userDTO.getEmail());
+        userRepository.save(oldUser);
+        return new UserDetailResponse(oldUser);
     }
 
     public List<UserDetailResponse> getALlUser()

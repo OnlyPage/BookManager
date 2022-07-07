@@ -8,6 +8,7 @@ import java.util.List;
 
 public class BookDTO
 {
+    private Integer id;
     private String nameBook;
     private String author;
     private String publicDate;
@@ -79,5 +80,13 @@ public class BookDTO
 
     public void setIdBooks(List<Integer> idBooks) {
         this.idBooks = idBooks;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

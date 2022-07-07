@@ -36,6 +36,19 @@ public class BookController {
         }
     }
 
+    @PutMapping("/book")
+    public ResponseEntity<BookDetailResponse> updateNewBook(@ModelAttribute BookDTO bookDTO)
+    {
+        try {
+            BookDetailResponse bookDetailResponse =  bookService.updateBook(bookDTO);
+            return new ResponseEntity<>(bookDetailResponse, HttpStatus.OK);
+        }catch (Exception exception)
+        {
+            throw new ResponseStatusException(
+                    HttpStatus.IM_USED,exception.getMessage(), exception);
+        }
+    }
+
     @DeleteMapping("/book/{id}")
     public String deleteBookById(@PathVariable("id") Integer id)
     {

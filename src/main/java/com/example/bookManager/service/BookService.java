@@ -52,14 +52,27 @@ public class BookService
         }
     }
 
-    public String updateBook(int id, BookDTO bookDTO)
+    public BookDetailResponse updateBook(BookDTO bookDTO)
     {
-        BookDetail bookDetail = bookRepository.findById(id).get();
-        bookDetail.setNameBook(bookDTO.getNameBook());
-        bookDetail.setAuthor(bookDTO.getAuthor());
-        bookDetail.setPublicDate(bookDTO.getPublicDate());
-        bookRepository.save(bookDetail);
-        return "update book success";
+        try
+        {
+            StoreDetail storeDetail = storeService.getStoreDetailByUsername(bookDTO.getUserName());
+            CategoryDetail categoryDetail = categoryService.getCategoryDetailById(bookDTO.getCategory());
+            BookDetail newBookDetail = bookRepository.findById(bookDTO.getId()).get();
+            newBookDetail.setNameBook(bookDTO.getNameBook());
+            newBookDetail.setAuthor(bookDTO.getAuthor());
+            newBookDetail.setPublicDate(bookDTO.getPublicDate());
+            newBookDetail.setNumber(bookDTO.getNumber());
+            newBookDetail.setStoreDetail(storeDetail);
+            newBookDetail.setCategoryDetail(categoryDetail);
+            newBookDetail.setCanBuy(!(bookDTO.getNumber() == 0));
+            newBookDetail.setPrice(bookDTO.getPrice());
+            bookRepository.save(newBookDetail);
+            return new BookDetailResponse(newBookDetail);
+        }catch (Exception e)
+        {
+            throw e;
+        }
     }
 
     public String updateBook(BookDetail bookDetail)

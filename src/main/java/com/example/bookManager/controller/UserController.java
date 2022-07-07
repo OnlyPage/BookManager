@@ -69,9 +69,16 @@ public class UserController
     }
 
     @PutMapping("/users")
-    public String updateNewUser(@ModelAttribute("userDetail") UserDTO userDto)
+    public ResponseEntity<UserDetailResponse> updateNewUser(@ModelAttribute("userDetail") UserDTO userDto)
     {
-        return userService.updateUser(userDto);
+        try {
+            UserDetailResponse userDetailResponse =  userService.updateUser(userDto);
+            return new ResponseEntity<>(userDetailResponse, HttpStatus.OK);
+        }catch (UsernameHasBeenUsedException exception)
+        {
+            throw new ResponseStatusException(
+                    HttpStatus.IM_USED, "Username has been used", exception);
+        }
     }
 
     @DeleteMapping("/users")
